@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,6 +29,7 @@ public class Main2Activity extends AppCompatActivity {
     private FingerprintTemplate candidateTemplate;
 
     private FingerprintMatcher fm = new FingerprintMatcher();
+    private TextView tview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,28 +41,28 @@ public class Main2Activity extends AppCompatActivity {
         Button mClickButtonProbe = (Button) findViewById(R.id.buttonProbe);
         Button mClickButtonCandidate = (Button) findViewById(R.id.buttonCandidate);
         Button mClickButtonCompare = (Button) findViewById(R.id.buttonCompare);
+        this.tview = (TextView) findViewById(R.id.resultsView);
 
         mClickButtonProbe.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                onButtonProbe();
+                pickImage(PICK_IMAGE_PROBE);
             }
         });
 
         mClickButtonCandidate.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                onButtonCandidate();
+                pickImage(PICK_IMAGE_CANDIDATE);
             }
         });
 
         mClickButtonCompare.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                onButtonCompare();
+                compareTemplates();
             }
         });
-
 
     }
 
@@ -85,22 +83,6 @@ public class Main2Activity extends AppCompatActivity {
 
     }
 
-    public void onButtonProbe(){
-        pickImage(PICK_IMAGE_PROBE);
-    }
-
-    public void onButtonCandidate(){
-        pickImage(PICK_IMAGE_CANDIDATE);
-    }
-
-    public void onButtonCompare(){
-
-        compareTemplates();
-
-    }
-
-
-
 
     public void pickImage(int destination){
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -110,7 +92,7 @@ public class Main2Activity extends AppCompatActivity {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
 
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select BMP Image");
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image File");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
         startActivityForResult(chooserIntent, destination);
